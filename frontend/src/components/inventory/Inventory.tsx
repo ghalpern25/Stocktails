@@ -55,9 +55,10 @@ export default function Inventory() {
     }
   };
 
-  const handleCreate = async (data: IngredientCreate) => {
+  const handleCreate = async (data: IngredientCreate | IngredientUpdate) => {
+    if (!data.name || !data.category) return;
     try {
-      await api.ingredients.create(data);
+      await api.ingredients.create({ name: data.name, category: data.category });
       setShowForm(false);
       loadIngredients();
     } catch (err) {

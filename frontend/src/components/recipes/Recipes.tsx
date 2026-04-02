@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Star } from 'lucide-react';
 import { api } from '../../hooks/useApi';
-import { RecipeList, Recipe, RecipeCreate, RecipeUpdate, Ingredient, CATEGORIES, CATEGORY_LABELS } from '../../types';
+import { RecipeList, Recipe, RecipeCreate, RecipeUpdate, Ingredient } from '../../types';
 import RecipeForm from './RecipeForm';
 
 export default function Recipes() {

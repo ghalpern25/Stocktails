@@ -5,6 +5,7 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/data:/app
+      - ./frontend/dist:/app/static
     environment:
       - PYTHONUNBUFFERED=1
       - DATABASE_URL=sqlite:///./homebar.db
