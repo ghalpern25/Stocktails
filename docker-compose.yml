@@ -4,8 +4,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./backend/data:/app
+      - ./backend/data:/app/data
       - ./frontend/dist:/app/static
     environment:
       - PYTHONUNBUFFERED=1
-      - DATABASE_URL=sqlite:///./homebar.db
+      - DATABASE_URL=sqlite:///./data/homebar.db
