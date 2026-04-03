@@ -22,18 +22,6 @@ app.add_middleware(
 app.include_router(ingredients_router)
 app.include_router(recipes_router)
 
-static_path = Path(__file__).parent.parent / "static"
-if static_path.exists():
-    app.mount("/", StaticFiles(directory=str(static_path), html=True), name="static")
-else:
-    @app.get("/{path:path}")
-    def serve_react_app(path: str):
-        index_path = Path(__file__).parent.parent / "static" / "index.html"
-        if index_path.exists():
-            from fastapi.responses import FileResponse
-            return FileResponse(str(index_path))
-        raise HTTPException(status_code=404, detail="Not Found")
-
 
 @app.get("/api/categories")
 def get_categories():
@@ -63,3 +51,16 @@ def get_shopping_list():
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
+
+
+static_path = Path(__file__).parent.parent / "static"
+if static_path.exists():
+    app.mount("/", StaticFiles(directory=str(static_path), html=True), name="static")
+else:
+    @app.get("/{path:path}")
+    def serve_react_app(path: str):
+        index_path = Path(__file__).parent.parent / "static" / "index.html"
+        if index_path.exists():
+            from fastapi.responses import FileResponse
+            return FileResponse(str(index_path))
+        raise HTTPException(status_code=404, detail="Not Found")
