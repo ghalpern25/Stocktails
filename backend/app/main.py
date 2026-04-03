@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
@@ -19,12 +19,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(ingredients_router)
+app.include_router(recipes_router)
+
 static_path = Path(__file__).parent.parent / "static"
 if static_path.exists():
     app.mount("/", StaticFiles(directory=str(static_path), html=True), name="static")
-
-app.include_router(ingredients_router)
-app.include_router(recipes_router)
+else:
+    @app.get("/{path:path}")
+    def serve_react_app(path: str):
+        index_path = Path(__file__).parent.parent / "static" / "index.html"
+        if index_path.exists():
+            from fastapi.responses import FileResponse
+            return FileResponse(str(index_path))
+        raise HTTPException(status_code=404, detail="Not Found")
 
 
 @app.get("/api/categories")
