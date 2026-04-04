@@ -106,7 +106,9 @@ export const GLASSWARE_OPTIONS = [
   'Pint Glass',
   'Copper Mule Mug',
   'Wine Glass',
+  'Champagne Flute',
   'Shot Glass',
   'Tiki Glass',
+  'Hurricane Glass',
   'Other',
 ];
