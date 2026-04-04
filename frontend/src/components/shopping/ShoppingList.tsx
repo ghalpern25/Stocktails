@@ -25,6 +25,15 @@ export default function ShoppingList() {
     loadShoppingList();
   }, [loadShoppingList]);
 
+  const handleToggleStock = async (id: number) => {
+    try {
+      await api.ingredients.toggleStock(id);
+      loadShoppingList();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to toggle stock');
+    }
+  };
+
   const filteredItems = items.filter(item => {
     if (filterCategory && item.category !== filterCategory) return false;
     return true;
@@ -87,6 +96,12 @@ export default function ShoppingList() {
                     <h3 className="font-semibold text-lg">{item.name}</h3>
                     <p className="text-sm text-gray-600">{CATEGORY_LABELS[item.category]}</p>
                   </div>
+                  <button
+                    onClick={() => handleToggleStock(item.id)}
+                    className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm"
+                  >
+                    Mark as Restocked
+                  </button>
                 </div>
               </div>
             ))}
