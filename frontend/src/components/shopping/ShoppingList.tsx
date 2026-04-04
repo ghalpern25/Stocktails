@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { api } from '../../hooks/useApi';
-import { ShoppingListItem, CATEGORY_LABELS } from '../../types';
+import { ShoppingListItem, CATEGORY_LABELS, CATEGORIES } from '../../types';
 
 export default function ShoppingList() {
   const [items, setItems] = useState<ShoppingListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [filterCategory, setFilterCategory] = useState<string>('');
 
   const loadShoppingList = useCallback(async () => {
     try {
@@ -24,6 +25,11 @@ export default function ShoppingList() {
     loadShoppingList();
   }, [loadShoppingList]);
 
+  const filteredItems = items.filter(item => {
+    if (filterCategory && item.category !== filterCategory) return false;
+    return true;
+  });
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -36,6 +42,19 @@ export default function ShoppingList() {
         </button>
       </div>
 
+      <div className="mb-6">
+        <select
+          value={filterCategory}
+          onChange={(e) => setFilterCategory(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+        >
+          <option value="">All Categories</option>
+          {CATEGORIES.map(cat => (
+            <option key={cat} value={cat}>{CATEGORY_LABELS[cat]}</option>
+          ))}
+        </select>
+      </div>
+
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
@@ -44,7 +63,7 @@ export default function ShoppingList() {
 
       {loading ? (
         <div className="text-center py-8 text-gray-500">Loading...</div>
-      ) : items.length === 0 ? (
+      ) : filteredItems.length === 0 ? (
         <div className="text-center py-8 text-gray-500">
           <p className="text-lg mb-2">Your bar is fully stocked!</p>
           <p>No ingredients needed.</p>
@@ -53,12 +72,12 @@ export default function ShoppingList() {
         <>
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <div className="text-sm text-gray-600">
-              {items.length} item{items.length !== 1 ? 's' : ''} to purchase
+              {filteredItems.length} item{filteredItems.length !== 1 ? 's' : ''} to purchase
             </div>
           </div>
 
           <div className="space-y-3">
-            {items.map((item) => (
+            {filteredItems.map((item) => (
               <div
                 key={item.id}
                 className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-red-400"
